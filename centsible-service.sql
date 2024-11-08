@@ -43,10 +43,12 @@ INSERT INTO user(first_name, email, password_hash, join_date) VALUES ('Krista', 
 INSERT INTO category_budget(user_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (1, 'Groceries', 100, '2024-11-01', '2024-11-30');
 INSERT INTO category_budget(user_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (2, 'Travel', 70, '2024-11-01', '2024-11-30');
 INSERT INTO category_budget(user_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (1, 'Shopping', 240, '2024-11-01', '2024-11-30');
+INSERT INTO category_budget(user_account_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (1, 'Movies', 5, '2024-11-01', '2024-11-30');
 
 INSERT INTO transaction_entry(user_ID, dollar_amount, transactionType, category_budget_ID, date_of_transaction) VALUES (1, 57.99, 'Expense', 3,'2024-11-06');
 INSERT INTO transaction_entry(user_ID, dollar_amount, transactionType, category_budget_ID, date_of_transaction) VALUES (1, 25, 'Expense', 1,'2024-11-06');
 INSERT INTO transaction_entry(user_ID, dollar_amount, transactionType, category_budget_ID, date_of_transaction) VALUES (2, 25, 'Expense', 2,'2024-11-07');
+
 
 
 
