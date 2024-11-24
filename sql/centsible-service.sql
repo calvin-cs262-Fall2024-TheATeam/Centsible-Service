@@ -2,52 +2,53 @@
 
 -- @author Alina Sainju
 
-DROP TABLE IF EXISTS transaction_entry;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS category_budget;
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS BudgetCategory;
+DROP TABLE IF EXISTS BudgetSubCategory;
+DROP TABLE IF EXISTS TransactionEntry;
 
-CREATE TABLE user (
+CREATE TABLE User (
     ID SERIAL PRIMARY KEY,
-    first_name varchar(50),
-    email varchar(50) NOT NULL,
-    password_hash varchar(50) NOT NULL,
-    join_date date
+    firstname VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    passwordhash VARCHAR(255) NOT NULL,
+    joindate DATE NOT NULL DEFAULT CURRENT_DATE,
+    currentbalance DECIMAL(15, 2) NOT NULL DEFAULT 0.00
 );
 
-CREATE TABLE category_budget (
+CREATE TABLE BudgetCategory (
     ID SERIAL PRIMARY KEY,
-    user_ID integer REFERENCES user(ID),
-    category_name varchar(50),
-    monthly_dollar_amount numeric,
-    starting_date date,
-    ending_date date
+    userID INT NOT NULL REFERENCES User(ID) ON DELETE CASCADE,
+    categoryname VARCHAR(100) NOT NULL,
+    monthlydollaramount DECIMAL(15, 2) NOT NULL CHECK (monthlydollaramount >= 0),
+    month SMALLINT NOT NULL CHECK (month BETWEEN 1 AND 12),
+    year SMALLINT NOT NULL CHECK (year >= 2000)
 );
 
-CREATE TABLE transaction_entry (
+CREATE TABLE BudgetSubcategory (
     ID SERIAL PRIMARY KEY,
-    user_ID integer REFERENCES user(ID),
-    dollar_amount numeric,
-    transactionType varchar(50),
-    category_budget_ID integer REFERENCES category_budget(ID),
-    date_of_transaction date
+    budgetcategoryID INT NOT NULL REFERENCES BudgetCategory(ID) ON DELETE CASCADE,
+    subcategoryname VARCHAR(100) NOT NULL,
+    monthlydollaramount DECIMAL(15, 2) NOT NULL CHECK (monthlydollaramount >= 0)
+);
+
+CREATE TABLE TransactionEntry (
+    ID SERIAL PRIMARY KEY,
+    userID INT NOT NULL REFERENCES User(ID) ON DELETE CASCADE,
+    dollaramount DECIMAL(15, 2) NOT NULL CHECK (dollaramount != 0),
+    type VARCHAR(50) NOT NULL CHECK (type IN ('Income', 'Expense')),
+    budgetcategoryID INT REFERENCES BudgetCategory(ID) ON DELETE SET NULL,
+    optionaldescription TEXT,
+    transactiondate DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 
-GRANT SELECT ON transaction_entry TO PUBLIC;
-GRANT SELECT ON user TO PUBLIC;
-GRANT SELECT ON category_budget TO PUBLIC;
+GRANT SELECT ON User TO PUBLIC;
+GRANT SELECT ON BudgetCategory TO PUBLIC;
+GRANT SELECT ON BudgetSubCategory TO PUBLIC;
+GRANT SELECT ON TransactionEntry TO PUBLIC;
 
-INSERT INTO user(first_name, email, password_hash, join_date) VALUES ('Jack', 'jack345@gmail.com', 'puppyknight', '2024-11-01');
-INSERT INTO user(first_name, email, password_hash, join_date) VALUES ('Krista', 'cristi_@gmail.com', 'olmpw', '2024-11-03');
 
-INSERT INTO category_budget(user_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (1, 'Groceries', 100, '2024-11-01', '2024-11-30');
-INSERT INTO category_budget(user_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (2, 'Travel', 70, '2024-11-01', '2024-11-30');
-INSERT INTO category_budget(user_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (1, 'Shopping', 240, '2024-11-01', '2024-11-30');
-INSERT INTO category_budget(user_account_ID, category_name, monthly_dollar_amount, starting_date, ending_date) VALUES (1, 'Movies', 5, '2024-11-01', '2024-11-30');
-
-INSERT INTO transaction_entry(user_ID, dollar_amount, transactionType, category_budget_ID, date_of_transaction) VALUES (1, 57.99, 'Expense', 3,'2024-11-06');
-INSERT INTO transaction_entry(user_ID, dollar_amount, transactionType, category_budget_ID, date_of_transaction) VALUES (1, 25, 'Expense', 1,'2024-11-06');
-INSERT INTO transaction_entry(user_ID, dollar_amount, transactionType, category_budget_ID, date_of_transaction) VALUES (2, 25, 'Expense', 2,'2024-11-07');
 
 
 
