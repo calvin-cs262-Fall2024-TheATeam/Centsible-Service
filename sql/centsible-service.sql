@@ -2,12 +2,12 @@
 
 -- @author Alina Sainju
 
-DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS AppUser;
 DROP TABLE IF EXISTS BudgetCategory;
 DROP TABLE IF EXISTS BudgetSubCategory;
 DROP TABLE IF EXISTS TransactionEntry;
 
-CREATE TABLE User (
+CREATE TABLE AppUser (
     ID SERIAL PRIMARY KEY,
     firstname VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE User (
 
 CREATE TABLE BudgetCategory (
     ID SERIAL PRIMARY KEY,
-    userID INT NOT NULL REFERENCES User(ID) ON DELETE CASCADE,
+    appuserID INT NOT NULL REFERENCES AppUser(ID) ON DELETE CASCADE,
     categoryname VARCHAR(100) NOT NULL,
     monthlydollaramount DECIMAL(15, 2) NOT NULL CHECK (monthlydollaramount >= 0),
     month SMALLINT NOT NULL CHECK (month BETWEEN 1 AND 12),
@@ -34,16 +34,16 @@ CREATE TABLE BudgetSubcategory (
 
 CREATE TABLE TransactionEntry (
     ID SERIAL PRIMARY KEY,
-    userID INT NOT NULL REFERENCES User(ID) ON DELETE CASCADE,
+    appuserID INT NOT NULL REFERENCES AppUser(ID) ON DELETE CASCADE,
     dollaramount DECIMAL(15, 2) NOT NULL CHECK (dollaramount != 0),
-    type VARCHAR(50) NOT NULL CHECK (type IN ('Income', 'Expense')),
+    transactiontype VARCHAR(50) NOT NULL CHECK (transactiontype IN ('Income', 'Expense')),
     budgetcategoryID INT REFERENCES BudgetCategory(ID) ON DELETE SET NULL,
     optionaldescription TEXT,
     transactiondate DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 
-GRANT SELECT ON User TO PUBLIC;
+GRANT SELECT ON AppUser TO PUBLIC;
 GRANT SELECT ON BudgetCategory TO PUBLIC;
 GRANT SELECT ON BudgetSubCategory TO PUBLIC;
 GRANT SELECT ON TransactionEntry TO PUBLIC;
