@@ -186,7 +186,7 @@ function createSubcategory(req, res, next) {
 
 // Gets all subcategories for a budget category of a User
 function readSubcategory(req, res, next) {
-  db.many('SELECT * FROM BudgetSubcategory WHERE budgetcategoryID=${budgetcategoryID}', req.params)
+  db.many('SELECT * FROM BudgetSubcategory WHERE budgetcategoryID=${id}', req.params)
     .then((data) => {
       res.send(data);
     })
@@ -198,7 +198,7 @@ function readSubcategory(req, res, next) {
 
 // Updates the name of Subcategory
 function updateSubcategoryName(req, res, next) {
-  db.oneOrNone('UPDATE BudgetSubcategory SET subcategoryname=${body.subcategoryname} WHERE ID=${ID} RETURNING id', req.params)
+  db.oneOrNone('UPDATE BudgetSubcategory SET subcategoryname=${body.subcategoryname} WHERE ID=${id} RETURNING id', req.body)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -209,7 +209,7 @@ function updateSubcategoryName(req, res, next) {
 
 // Updates the monthly dollar amount of Subcategory
 function updateSubcategoryAmount(req, res, next) {
-  db.oneOrNone('UPDATE BudgetSubcategory SET monthlydollaramount=${body.monthlydollaramount} WHERE ID=${ID} RETURNING id', req.params)
+  db.oneOrNone('UPDATE BudgetSubcategory SET monthlydollaramount=${body.monthlydollaramount} WHERE ID=${id} RETURNING id', req.body)
     .then((data) => {
       returnDataOr404(res, data);
     })
