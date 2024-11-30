@@ -33,6 +33,7 @@ router.post('/defaultMonthBudget', createDefaultMonthBudget);
 router.get('/monthBudget', readMonthBudget);
 router.put('/monthBudget', updateMonthBudget);
 router.post('/budgetSubcategory', createSubcategory);
+router.get('/budgetSubcategory/:id', readSubcategory);
 router.put('/budgetSubcategoryAmount', updateSubcategoryAmount);
 router.put('/budgetSubcategoryName', updateSubcategoryName);
 router.delete('/budgetSubcategory/:id', deleteSubcategory);
@@ -175,6 +176,17 @@ function updateMonthBudget(req, res, next) {
 // Creates new subcategory with dollar amount for a particular category in the month budget for a User
 function createSubcategory(req, res, next) {
   db.one('INSERT INTO BudgetSubcategory(budgetcategoryID, subcategoryname, monthlydollaramount) VALUES (${budgetcategoryID}, ${subcategoryname}, ${monthlydollaramount} RETURNING id', req.body)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+// Gets all subcategories for a budget category of a User
+function readSubcategory(req, res, next) {
+  db.many('SELECT * FROM BudgetSubcategory WHERE budgetcategoryID=${budgetcategoryID}', req.params)
     .then((data) => {
       res.send(data);
     })
