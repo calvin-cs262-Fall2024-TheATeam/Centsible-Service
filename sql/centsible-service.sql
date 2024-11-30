@@ -16,6 +16,8 @@ CREATE TABLE AppUser (
     currentbalance DECIMAL(15, 2) NOT NULL DEFAULT 0.00
 );
 
+
+
 CREATE TABLE BudgetCategory (
     ID SERIAL PRIMARY KEY,
     appuserID INT NOT NULL REFERENCES AppUser(ID) ON DELETE CASCADE,
