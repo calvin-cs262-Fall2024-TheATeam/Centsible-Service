@@ -27,7 +27,8 @@ router.get('/transactions/:id', readTransactions);
 router.delete('/transactions/:id', deleteTransaction);
 // router.put('/transactions/:id', updateTransaction); // Edit Transaction functionality not implemented yet
 router.get('/currentBalance/:id', readCurrentBalance);
-router.put('/currentBalance/:id', updateCurrentBalance);
+router.put('/currentBalance', updateCurrentBalance);
+router.put('/budgetCategoryName/:id', readBudgetCategoryName);
 
 router.post('/defaultMonthBudget', createDefaultMonthBudget);
 router.get('/monthBudget', readMonthBudget);
@@ -110,9 +111,21 @@ function readCurrentBalance(req, res, next) {
 // Update Current Balance of a User based on new added transactions
 // Note: 'newbalance' should be computed on the client side
 function updateCurrentBalance(req, res, next) {
-  db.oneOrNone('UPDATE AppUser SET currentbalance=${body.newbalance} WHERE ID=${id} RETURNING id', req.params)
+  db.oneOrNone('UPDATE AppUser SET currentbalance=${newbalance} WHERE ID=${id} RETURNING id', req.body)
     .then((data) => {
       returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+
+// Reads the budget category name given the ID of the budgetCategory
+function readBudgetCategoryName(req, res, next) {
+  db.one('SELECT categoryname FROM BudgetCategory WHERE ID=${id}', req.params)
+    .then((data) => {
+      res.send(data);
     })
     .catch((err) => {
       next(err);
@@ -163,7 +176,7 @@ function readMonthBudget(req, res, next) {
 // Updates the monthly dollar amount of a budget category
 // Note: 'monthlydollaramount' should be computed on the client side by totalling up the amounts of the subcategories, if they exist
 function updateMonthBudget(req, res, next) {
-  db.oneOrNone('UPDATE BudgetCategory SET monthlydollaramount=${body.monthlydollaramount} WHERE month_=${month} AND year_=${year} RETURNING id', req.body)
+  db.oneOrNone('UPDATE BudgetCategory SET monthlydollaramount=${monthlydollaramount} WHERE month_=${month} AND year_=${year} RETURNING id', req.body)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -198,7 +211,7 @@ function readSubcategory(req, res, next) {
 
 // Updates the name of Subcategory
 function updateSubcategoryName(req, res, next) {
-  db.oneOrNone('UPDATE BudgetSubcategory SET subcategoryname=${body.subcategoryname} WHERE ID=${id} RETURNING id', req.body)
+  db.oneOrNone('UPDATE BudgetSubcategory SET subcategoryname=${subcategoryname} WHERE ID=${id} RETURNING id', req.body)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -209,7 +222,7 @@ function updateSubcategoryName(req, res, next) {
 
 // Updates the monthly dollar amount of Subcategory
 function updateSubcategoryAmount(req, res, next) {
-  db.oneOrNone('UPDATE BudgetSubcategory SET monthlydollaramount=${body.monthlydollaramount} WHERE ID=${id} RETURNING id', req.body)
+  db.oneOrNone('UPDATE BudgetSubcategory SET monthlydollaramount=${monthlydollaramount} WHERE ID=${id} RETURNING id', req.body)
     .then((data) => {
       returnDataOr404(res, data);
     })
