@@ -60,12 +60,13 @@ function readHelloMessage(req, res) {
 
 
 // Add Transaction for a User
-// Note: id returned for local storage of transaction details for faster display of view - not necessary to take this approach, but recommended
+// Note: id + rest of transaction details returned for local storage of transaction details for faster display of view - not necessary to take this approach, but recommended
 //       Also returned for PUT/DELETE operation so that the code can refer to the specific transaction
 function createTransaction(req, res, next) {
   db.one('INSERT INTO TransactionEntry(appuserID, dollaramount, transactiontype, budgetcategoryID, optionaldescription, transactiondate) VALUES (${appuserID}, ${dollaramount}, ${transactiontype}, ${budgetcategoryID}, ${optionaldescription}, ${transactiondate}) RETURNING id', req.body)
     .then((data) => {
-      res.send(data);
+      const responseBody = { id: data.id, ...req.body };
+      res.send(responseBody);
     })
     .catch((err) => {
       next(err);
