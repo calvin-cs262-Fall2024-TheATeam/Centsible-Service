@@ -28,7 +28,7 @@ router.delete('/transactions/:id', deleteTransaction);
 // router.put('/transactions/:id', updateTransaction); // Edit Transaction functionality not implemented yet
 router.get('/currentBalance/:id', readCurrentBalance);
 router.put('/currentBalance', updateCurrentBalance);
-router.put('/budgetCategoryName/:id', readBudgetCategoryName);
+router.get('/budgetCategoryName/:id', readBudgetCategoryName);
 
 router.post('/defaultMonthBudget', createDefaultMonthBudget);
 router.get('/monthBudget', readMonthBudget);
