@@ -7,5 +7,8 @@ This is the data service application for our [CS 262 budget app project.](https:
 It has the following read data route URLs:
 
 - / a hello message
-- /transactions/:id transactions of user
-- /currentBalance/:id the current balance of user
+- /transactions/:id all transactions of user id
+- /currentBalance/:id the current balance of user id
+- /budgetCategoryName/:id the category name of budget category id
+- /monthBudget budget information of a user for a particular month
+- /budgetSubcategory/:id all subcategories for a budget category id
