@@ -137,10 +137,10 @@ function readBudgetCategoryName(req, res, next) {
 // Create default month budget (ie. default categories for a month with default dollar amounts of $0) for a User
 // Note: client provides appuserID, month and year
 function createDefaultMonthBudget(req, res, next) {
-  const categoryList = ['Housing', 'Entertainment', 'Personal', 'Food', 'Transportation'];
+  const categoryList = ['Housing', 'Entertainment', 'Personal', 'Food', 'Transportation', 'Education'];
   const { appuserID, month, year } = req.body;
 
-  // insertValues is a list of 5 objects with each having the following attributes
+  // insertValues is a list of 6 objects with each having the following attributes
   const insertValues = categoryList.map(category => ({
     appuserID,
     categoryname: category,
@@ -149,7 +149,7 @@ function createDefaultMonthBudget(req, res, next) {
     year
   }));
 
-  // this ForLoop inserts five rows of default budget categories
+  // this ForLoop inserts six rows of default budget categories
   for (const value of insertValues) {
     db.none("INSERT INTO BudgetCategory(appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (${appuserID}, ${category}, ${monthlydollaramount}, ${month}, ${year});", value)
       .then(() => {
