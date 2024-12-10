@@ -31,7 +31,8 @@ router.put('/currentBalance', updateCurrentBalance);
 router.get('/budgetCategoryName/:id', readBudgetCategoryName);
 
 router.post('/defaultMonthBudget', createDefaultMonthBudget);
-router.get('/monthBudget', readMonthBudget);
+// router.get('/monthBudget', readMonthBudget);
+router.get('/monthBudget/:appuserID/:month/:year', readMonthBudget);
 router.put('/monthBudget', updateMonthBudget);
 router.post('/budgetSubcategory', createSubcategory);
 router.get('/budgetSubcategory/:id', readSubcategory);
@@ -136,32 +137,6 @@ function readBudgetCategoryName(req, res, next) {
 
 // Create default month budget (ie. default categories for a month with default dollar amounts of $0) for a User
 // Note: client provides appuserID, month and year
-
-// function createDefaultMonthBudget(req, res, next) {
-//   const categoryList = ['Housing', 'Entertainment', 'Personal', 'Food', 'Transportation', 'Education'];
-//   const { appuserID, month, year } = req.body;
-
-//   // insertValues is a list of 6 objects with each having the following attributes
-//   const insertValues = categoryList.map(category => ({
-//     appuserID,
-//     categoryname: category,
-//     monthlydollaramount: 0,
-//     month,
-//     year
-//   }));
-
-//   // this ForLoop inserts six rows of default budget categories
-//   for (const value of insertValues) {
-//     db.none("INSERT INTO BudgetCategory(appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (${appuserID}, ${category}, ${monthlydollaramount}, ${month}, ${year});", value)
-//       .then(() => {
-//         res.sendStatus(201); // Send a 201 Created status code
-//       })
-//       .catch((err) => {
-//         next(err);
-//       });
-//   }
-// }
-
 function createDefaultMonthBudget(req, res, next) {
   const categoryList = ['Housing', 'Entertainment', 'Personal', 'Food', 'Transportation', 'Education'];
   const { appuserID, month, year } = req.body;
@@ -196,7 +171,13 @@ function createDefaultMonthBudget(req, res, next) {
 
 // Gets budget information of a User for a particular month
 function readMonthBudget(req, res, next) {
-  db.many('SELECT * FROM BudgetCategory WHERE appuserID=${appuserID} AND month_=${month} AND year_=${year}', req.body)
+  const { appuserID, month, year } = req.params;
+
+  db.many('SELECT * FROM BudgetCategory WHERE appuserID=${appuserID} AND month_=${month} AND year_=${year}', {
+    appuserID,
+    month,
+    year
+  })
     .then((data) => {
       res.send(data);
     })
