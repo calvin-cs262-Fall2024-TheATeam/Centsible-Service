@@ -136,6 +136,32 @@ function readBudgetCategoryName(req, res, next) {
 
 // Create default month budget (ie. default categories for a month with default dollar amounts of $0) for a User
 // Note: client provides appuserID, month and year
+
+// function createDefaultMonthBudget(req, res, next) {
+//   const categoryList = ['Housing', 'Entertainment', 'Personal', 'Food', 'Transportation', 'Education'];
+//   const { appuserID, month, year } = req.body;
+
+//   // insertValues is a list of 6 objects with each having the following attributes
+//   const insertValues = categoryList.map(category => ({
+//     appuserID,
+//     categoryname: category,
+//     monthlydollaramount: 0,
+//     month,
+//     year
+//   }));
+
+//   // this ForLoop inserts six rows of default budget categories
+//   for (const value of insertValues) {
+//     db.none("INSERT INTO BudgetCategory(appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (${appuserID}, ${category}, ${monthlydollaramount}, ${month}, ${year});", value)
+//       .then(() => {
+//         res.sendStatus(201); // Send a 201 Created status code
+//       })
+//       .catch((err) => {
+//         next(err);
+//       });
+//   }
+// }
+
 function createDefaultMonthBudget(req, res, next) {
   const categoryList = ['Housing', 'Entertainment', 'Personal', 'Food', 'Transportation', 'Education'];
   const { appuserID, month, year } = req.body;
@@ -149,17 +175,23 @@ function createDefaultMonthBudget(req, res, next) {
     year
   }));
 
-  // this ForLoop inserts six rows of default budget categories
-  for (const value of insertValues) {
-    db.none("INSERT INTO BudgetCategory(appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (${appuserID}, ${category}, ${monthlydollaramount}, ${month}, ${year});", value)
-      .then(() => {
-        res.sendStatus(201); // Send a 201 Created status code
-      })
-      .catch((err) => {
-        next(err);
-      });
-  }
+  // batch inserts
+  const queries = insertValues.map(value =>
+    db.none(
+      "INSERT INTO BudgetCategory(appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (${appuserID}, ${categoryname}, ${monthlydollaramount}, ${month}, ${year});",
+      value
+    )
+  );
+
+  Promise.all(queries) // wait for all the inserts to be finished
+    .then(() => {
+      res.sendStatus(201); // send success response after all inserts complete
+    })
+    .catch(err => {
+      next(err);
+    });
 }
+
 
 
 // Gets budget information of a User for a particular month
