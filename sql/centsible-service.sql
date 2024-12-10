@@ -55,6 +55,11 @@ GRANT SELECT ON TransactionEntry TO PUBLIC;
 -- INSERT INTO AppUser(ID, firstname, email, passwordhash) VALUES (1, 'Annie', 'annie_carter@gmail.com', 'annieandbudget');
 
 -- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (1, 1, 'Education', 580, 12, 2024);
+-- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (2, 1, 'Housing', 30, 12, 2024);
+-- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (3, 1, 'Entertainment', 50, 12, 2024);
+-- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (4, 1, 'Personal', 130, 12, 2024);
+-- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (5, 1, 'Food', 60, 12, 2024);
+-- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (6, 1, 'Transportation', 35, 12, 2024);
 
 -- INSERT INTO BudgetSubCategory(ID, budgetcategoryID, subcategoryname, monthlydollaramount) VALUES (1, 1, 'Books', 200);
 -- INSERT INTO BudgetSubCategory(ID, budgetcategoryID, subcategoryname, monthlydollaramount) VALUES (2, 1, 'Stationery', 50);
