@@ -41,7 +41,7 @@ CREATE TABLE TransactionEntry (
     transactiontype VARCHAR(50) NOT NULL CHECK (transactiontype IN ('Income', 'Expense')),
     budgetcategoryID INT REFERENCES BudgetCategory(ID) ON DELETE SET NULL,
     optionaldescription VARCHAR(100) NOT NULL DEFAULT '',
-    transactiondate DATE NOT NULL DEFAULT CURRENT_DATE
+    transactiondate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
