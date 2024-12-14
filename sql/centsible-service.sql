@@ -51,7 +51,7 @@ GRANT SELECT ON BudgetSubCategory TO PUBLIC;
 GRANT SELECT ON TransactionEntry TO PUBLIC;
 
 
--- Sample Data
+-- Initial Sample Data (Does not reflect everything that is currently in the database)
 -- INSERT INTO AppUser(ID, firstname, email, passwordhash) VALUES (1, 'Annie', 'annie_carter@gmail.com', 'annieandbudget');
 
 -- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (1, 1, 'Education', 580, 12, 2024);
