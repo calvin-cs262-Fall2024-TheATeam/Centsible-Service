@@ -63,6 +63,8 @@ GRANT SELECT ON TransactionEntry TO PUBLIC;
 
 -- INSERT INTO BudgetSubCategory(ID, budgetcategoryID, subcategoryname, monthlydollaramount) VALUES (1, 1, 'Books', 200);
 -- INSERT INTO BudgetSubCategory(ID, budgetcategoryID, subcategoryname, monthlydollaramount) VALUES (2, 1, 'Stationery', 50);
+-- INSERT INTO BudgetSubcategory(ID, budgetcategoryID, subcategoryname, monthlydollaramount) VALUES (3, 1, 'Tuition', 200);
+-- INSERT INTO BudgetSubcategory(ID, budgetcategoryID, subcategoryname, monthlydollaramount) VALUES (4, 1, 'Lab Fees', 20);
 
 -- INSERT INTO TransactionEntry(ID, appuserID, dollaramount, transactiontype, budgetcategoryID) VALUES (1,1,14,'Expense', 1);
 -- INSERT INTO TransactionEntry(ID, appuserID, dollaramount, transactiontype, budgetcategoryID) VALUES (2,1,5,'Expense', 1);
