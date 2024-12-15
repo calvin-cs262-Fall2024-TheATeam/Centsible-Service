@@ -23,6 +23,9 @@ router.use(express.json());
 const argon2 = require('argon2');
 
 router.get('/', readHelloMessage);
+
+router.post('/register', registerUser);
+
 router.post('/transactions', createTransaction);
 router.get('/transactions/:id', readTransactions);
 router.delete('/transactions/:id', deleteTransaction);
@@ -58,6 +61,43 @@ function returnDataOr404(res, data) {
 function readHelloMessage(req, res) {
   res.send('Hello, Centsible Service!');
 }
+
+
+// Registration API
+function registerUser(req, res, next) {
+  const { firstname, email, password } = req.body;
+
+  if (!firstname || !email || !password) {
+    return res.status(400).json({ message: 'Firstname, email, and password are required.' });
+  }
+
+  // Check if the email already exists
+  db.manyOrNone('SELECT * FROM AppUser WHERE email = ${email}', {
+    email
+  })
+    .then((data) => {
+      if (data && data.length > 0) {
+        // Data exists
+        res.status(404).send({
+          message: 'No budget data found for the specified user and date',
+        });
+      } else {
+        // No data found
+        res.status(404).send({
+          success: false,
+          message: 'No budget data found for the specified user and date',
+        });
+      }
+    })
+    .catch((err) => {
+      // Server error
+      console.error('Error querying database:', err);
+      res.status(500).send({
+        success: false,
+        message: 'An internal server error occurred. Please try again later.',
+      });
+    });
+};
 
 
 // Add Transaction for a User
@@ -325,6 +365,8 @@ function deleteSubcategory(req, res, next) {
       next(err);
     });
 }
+
+
 
 
 
