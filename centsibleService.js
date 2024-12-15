@@ -170,19 +170,55 @@ function createDefaultMonthBudget(req, res, next) {
 
 
 // Gets budget information of a User for a particular month
+// function readMonthBudget(req, res, next) {
+//   const { appuserID, month, year } = req.params;
+
+//   db.many('SELECT * FROM BudgetCategory WHERE appuserID=${appuserID} AND month_=${month} AND year_=${year}', {
+//     appuserID,
+//     month,
+//     year
+//   })
+//     .then((data) => {
+//       res.send(data);
+//     })
+//     .catch((err) => {
+//       next(err);
+//     });
+// }
+
+
+// Gets budget information of a User for a particular month
 function readMonthBudget(req, res, next) {
   const { appuserID, month, year } = req.params;
 
-  db.many('SELECT * FROM BudgetCategory WHERE appuserID=${appuserID} AND month_=${month} AND year_=${year}', {
+  db.manyOrNone('SELECT * FROM BudgetCategory WHERE appuserID=${appuserID} AND month_=${month} AND year_=${year}', {
     appuserID,
     month,
     year
   })
     .then((data) => {
-      res.send(data);
+      if (data && data.length > 0) {
+        // Data exists
+        res.send({
+          success: true,
+          message: 'Budget data retrieved successfully',
+          data,
+        });
+      } else {
+        // No data found
+        res.status(404).send({
+          success: false,
+          message: 'No budget data found for the specified user and date',
+        });
+      }
     })
     .catch((err) => {
-      next(err);
+      // Server error
+      console.error('Error querying database:', err);
+      res.status(500).send({
+        success: false,
+        message: 'An internal server error occurred. Please try again later.',
+      });
     });
 }
 
@@ -213,15 +249,47 @@ function createSubcategory(req, res, next) {
 }
 
 // Gets all subcategories for a budget category of a User
+// function readSubcategory(req, res, next) {
+//   db.many('SELECT * FROM BudgetSubcategory WHERE budgetcategoryID=${id}', req.params)
+//     .then((data) => {
+//       res.send(data);
+//     })
+//     .catch((err) => {
+//       next(err);
+//     });
+// }
+
+// Gets all subcategories for a budget category of a User
 function readSubcategory(req, res, next) {
-  db.many('SELECT * FROM BudgetSubcategory WHERE budgetcategoryID=${id}', req.params)
+  const { id } = req.params;
+
+  db.manyOrNone('SELECT * FROM BudgetSubcategory WHERE budgetcategoryID=${id}', { id })
     .then((data) => {
-      res.send(data);
+      if (data && data.length > 0) {
+        // Subcategories found
+        res.send({
+          success: true,
+          message: 'Subcategories retrieved successfully',
+          data,
+        });
+      } else {
+        // No subcategories found
+        res.status(404).send({
+          success: false,
+          message: 'No subcategories found for the specified budget category',
+        });
+      }
     })
     .catch((err) => {
-      next(err);
+      // Server error
+      console.error('Error querying database:', err);
+      res.status(500).send({
+        success: false,
+        message: 'An internal server error occurred. Please try again later.',
+      });
     });
 }
+
 
 
 // Updates the name of Subcategory
