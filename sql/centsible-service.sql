@@ -11,7 +11,7 @@ CREATE TABLE AppUser (
     ID SERIAL PRIMARY KEY,
     firstname VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    passwordhash VARCHAR(255) NOT NULL,
+    passwordhash TEXT NOT NULL,
     joindate DATE NOT NULL DEFAULT CURRENT_DATE,
     currentbalance DECIMAL(15, 2) NOT NULL DEFAULT 0.00
 );

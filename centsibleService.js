@@ -20,8 +20,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 const router = express.Router();
 router.use(express.json());
+const argon2 = require('argon2');
 
 router.get('/', readHelloMessage);
+
+router.post('/registerUser', registerUser);
+router.post('/loginUser', loginUser);
+
 router.post('/transactions', createTransaction);
 router.get('/transactions/:id', readTransactions);
 router.delete('/transactions/:id', deleteTransaction);
@@ -30,7 +35,6 @@ router.put('/currentBalance', updateCurrentBalance);
 router.get('/budgetCategoryName/:id', readBudgetCategoryName);
 
 router.post('/defaultMonthBudget', createDefaultMonthBudget);
-// router.get('/monthBudget', readMonthBudget);
 router.get('/monthBudget/:appuserID/:month/:year', readMonthBudget);
 router.put('/monthBudget', updateMonthBudget);
 router.post('/budgetSubcategory', createSubcategory);
@@ -56,6 +60,71 @@ function returnDataOr404(res, data) {
 
 function readHelloMessage(req, res) {
   res.send('Hello, Centsible Service!');
+}
+
+
+// Registration API
+function registerUser(req, res, next) {
+  const { firstname, email, password } = req.body;
+
+  if (!firstname || !email || !password) {
+    return res.status(400).json({ message: 'Firstname, email, and password are required.' });
+  }
+
+  // Check if the email already exists
+  db.manyOrNone('SELECT * FROM AppUser WHERE email = $1', [email])
+    .then((data) => {
+      if (data && data.length > 0) {
+        return res.status(404).json({ message: 'User already exists.' });
+      }
+
+      // Hash the password
+      return argon2.hash(password)
+        .then((hashedPassword) => {
+          // Insert user into the database and return the new user's ID
+          return db.one(
+            'INSERT INTO AppUser (firstname, email, passwordhash) VALUES ($1, $2, $3) RETURNING id',
+            [firstname, email, hashedPassword]
+          );
+        });
+    })
+    .then((result) => {
+      res.status(201).json({ id: result.id, message: 'User registered successfully.' });
+    })
+    .catch((err) => {
+      console.error('Database or hashing error:', err);
+      res.status(500).json({ message: 'An internal server error occurred. Please try again later.' });
+    });
+}
+
+
+// Login API
+function loginUser(req, res, next) {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required.' });
+  }
+
+  // Checks if the email exists in the database
+  db.one('SELECT * FROM AppUser WHERE email = $1', [email])
+    .then((user) => {
+      // Compares the provided password with the hashed password stored in the database
+      return argon2.verify(user.passwordhash, password)
+        .then((isValid) => {
+          if (isValid) {
+            // Authentication successful
+            res.status(200).json({ id: user.id, message: 'User logged in successfully.' });
+          } else {
+            // Password does not match
+            res.status(401).json({ message: 'Invalid email or password.' });
+          }
+        });
+    })
+    .catch((err) => {
+      console.error('Login error:', err);
+      res.status(404).json({ message: 'User not found.' });
+    });
 }
 
 
@@ -294,7 +363,6 @@ function deleteSubcategory(req, res, next) {
       next(err);
     });
 }
-
 
 
 
