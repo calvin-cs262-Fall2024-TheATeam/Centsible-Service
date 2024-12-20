@@ -38,18 +38,5 @@ WHERE
   user_account.first_name = 'Krista';
 
 
--- Compare budget amount and expense transactions for user 'Jack' and budget category 'Groceries'
--- SELECT
---   user_account.first_name,
---   transaction_entry.dollar_amount,
---   category_budget.monthly_dollar_amount
--- FROM
---   user_account
--- JOIN
---   transaction_entry ON user_account.ID = transaction_entry.user_account_ID
--- JOIN
---   category_budget ON transaction_entry.category_budget_ID = category_budget.ID
--- WHERE (user_account.first_name = 'Jack' AND category_budget.category_name = 'Groceries');
-
 
 

@@ -10,5 +10,5 @@ It has the following read data route URLs:
 - /transactions/:id all transactions of user id
 - /currentBalance/:id the current balance of user id
 - /budgetCategoryName/:id the category name of budget category id
-- /monthBudget budget information of a user for a particular month
+- /monthBudget/:appuserID/:month/:year budget information of a user for a particular month
 - /budgetSubcategory/:id all subcategories for a budget category id

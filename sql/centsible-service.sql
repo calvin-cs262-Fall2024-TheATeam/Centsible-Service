@@ -16,8 +16,6 @@ CREATE TABLE AppUser (
     currentbalance DECIMAL(15, 2) NOT NULL DEFAULT 0.00
 );
 
-
-
 CREATE TABLE BudgetCategory (
     ID SERIAL PRIMARY KEY,
     appuserID INT NOT NULL REFERENCES AppUser(ID) ON DELETE CASCADE,
@@ -52,6 +50,7 @@ GRANT SELECT ON TransactionEntry TO PUBLIC;
 
 
 -- Initial Sample Data (Does not reflect everything that is currently in the database)
+
 -- INSERT INTO AppUser(ID, firstname, email, passwordhash) VALUES (1, 'Annie', 'annie_carter@gmail.com', 'annieandbudget');
 
 -- INSERT INTO BudgetCategory(ID, appuserID, categoryname, monthlydollaramount, month_, year_) VALUES (1, 1, 'Education', 580, 12, 2024);

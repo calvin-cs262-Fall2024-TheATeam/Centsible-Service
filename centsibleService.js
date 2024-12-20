@@ -25,7 +25,6 @@ router.get('/', readHelloMessage);
 router.post('/transactions', createTransaction);
 router.get('/transactions/:id', readTransactions);
 router.delete('/transactions/:id', deleteTransaction);
-// router.put('/transactions/:id', updateTransaction); // Edit Transaction functionality not implemented yet
 router.get('/currentBalance/:id', readCurrentBalance);
 router.put('/currentBalance', updateCurrentBalance);
 router.get('/budgetCategoryName/:id', readBudgetCategoryName);
@@ -61,8 +60,6 @@ function readHelloMessage(req, res) {
 
 
 // Add Transaction for a User
-// Note: id + rest of transaction details returned for local storage of transaction details for faster display of view - not necessary to take this approach, but recommended
-//       Also returned for PUT/DELETE operation so that the code can refer to the specific transaction
 function createTransaction(req, res, next) {
   db.one('INSERT INTO TransactionEntry(appuserID, dollaramount, transactiontype, budgetcategoryID, optionaldescription, transactiondate) VALUES (${appuserID}, ${dollaramount}, ${transactiontype}, ${budgetcategoryID}, ${optionaldescription}, ${transactiondate}) RETURNING id', req.body)
     .then((data) => {
@@ -170,24 +167,6 @@ function createDefaultMonthBudget(req, res, next) {
 
 
 // Gets budget information of a User for a particular month
-// function readMonthBudget(req, res, next) {
-//   const { appuserID, month, year } = req.params;
-
-//   db.many('SELECT * FROM BudgetCategory WHERE appuserID=${appuserID} AND month_=${month} AND year_=${year}', {
-//     appuserID,
-//     month,
-//     year
-//   })
-//     .then((data) => {
-//       res.send(data);
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// }
-
-
-// Gets budget information of a User for a particular month
 function readMonthBudget(req, res, next) {
   const { appuserID, month, year } = req.params;
 
@@ -248,16 +227,6 @@ function createSubcategory(req, res, next) {
     });
 }
 
-// Gets all subcategories for a budget category of a User
-// function readSubcategory(req, res, next) {
-//   db.many('SELECT * FROM BudgetSubcategory WHERE budgetcategoryID=${id}', req.params)
-//     .then((data) => {
-//       res.send(data);
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// }
 
 // Gets all subcategories for a budget category of a User
 function readSubcategory(req, res, next) {
